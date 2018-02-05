@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import ideas.server.Server;
+import ideas.version.SoftwareVersionFinder;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,11 +17,11 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import ideas.server.Server;
-import ideas.version.SoftwareVersionFinder;
-
 public class SoftwareVersionFinderTest {
 	private SoftwareVersionFinder versionFinder;
+	String ifile = "src/test/resources/input.txt";
+	String ofile = "src/test/resources/output.txt";
+	String lineSplitter = ",\\s*";
 
 	@Before
 	public void setUp() throws Exception {
@@ -46,36 +48,36 @@ public class SoftwareVersionFinderTest {
 
 	@Test
 	public void whenInputFileIsVaidThenReturnParsedServerDetails() {
-		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt", ",\\s*");
+		List<Server> serverDetails = versionFinder.readInputFile(ifile, lineSplitter);
 		assertNotNull("Server list should not be null", serverDetails);
 		assertEquals("Server list should contain 6 elemets", 6, serverDetails.size());
 	}
 
 	@Test
 	public void whenServerDetailsArePassedThenShowSoftwareWithOutdatedVersion() {
-		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt", ",\\s*");
+		List<Server> serverDetails = versionFinder.readInputFile(ifile, lineSplitter);
 		List<String> result = versionFinder.processData(serverDetails);
 		assertEquals("Incorrect output", "[Python]", result.toString());
 	}
 
 	@Test
 	public void whenInvalidProcessedDataIsPassedThenNoFileShouldBeCreated() {
-		versionFinder.writeOutputFile("src/test/resources/output.txt", null);
-		boolean exists = Files.exists(Paths.get("src/test/resources/output.txt"));
+		versionFinder.writeOutputFile(ofile, null);
+		boolean exists = Files.exists(Paths.get(ofile));
 		assertFalse("File should not be created", exists);
 
 		try {
-			Files.deleteIfExists(Paths.get("src/test/resources/output.txt"));
+			Files.deleteIfExists(Paths.get(ofile));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		versionFinder.writeOutputFile("src/test/resources/output.txt", new ArrayList<>());
-		exists = Files.exists(Paths.get("src/test/resources/output.txt"));
+		versionFinder.writeOutputFile(ofile, new ArrayList<>());
+		exists = Files.exists(Paths.get(ofile));
 		assertFalse("File should not be created", exists);
 
 		try {
-			Files.deleteIfExists(Paths.get("src/test/resources/output.txt"));
+			Files.deleteIfExists(Paths.get(ofile));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -83,10 +85,9 @@ public class SoftwareVersionFinderTest {
 
 	@Test
 	public void whenProcessedDataIsPassedThenFileShouldBeCreatedAndWrittenCorrectly() {
-		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt", ",\\s*");
+		List<Server> serverDetails = versionFinder.readInputFile(ifile, lineSplitter);
 		List<String> result = versionFinder.processData(serverDetails);
 
-		String ofile = "src/test/resources/output.txt";
 		versionFinder.writeOutputFile(ofile, result);
 
 		boolean exists = Files.exists(Paths.get(ofile));
