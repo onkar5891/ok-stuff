@@ -13,11 +13,11 @@ import java.util.stream.Stream;
 import ideas.server.Server;
 
 public class SoftwareVersionFinder {
-	String ifileName = "src/main/resources/input.txt", ofileName = "src/main/resources/output.txt";
+	String ifileName = "src/main/resources/input.txt", ofileName = "src/main/resources/output.txt", lineSpliter = ",\\s*";
 
 	public static void main(String[] args) {
 		SoftwareVersionFinder versionFinder = new SoftwareVersionFinder();
-		List<Server> serverDetails = versionFinder.readInputFile(versionFinder.ifileName);
+		List<Server> serverDetails = versionFinder.readInputFile(versionFinder.ifileName, versionFinder.lineSpliter);
 
 		if (serverDetails != null) {
 			List<String> processedData = versionFinder.processData(serverDetails);
@@ -57,12 +57,12 @@ public class SoftwareVersionFinder {
 		return result;
 	}
 
-	public List<Server> readInputFile(String ifileName) {
+	public List<Server> readInputFile(String ifileName, String lineSplitter) {
 		if (ifileName != null && !ifileName.isEmpty()) {
 			List<Server> serverDetails = new ArrayList<>();
 			try (Stream<String> lines = Files.lines(Paths.get(ifileName))) {
 				lines.forEach(line -> {
-					String[] parsedLine = line.split(",\\s*");
+					String[] parsedLine = line.split(lineSplitter);
 					if (parsedLine.length == 4) {
 						serverDetails.add(new Server(parsedLine[0], parsedLine[1], parsedLine[2], parsedLine[3]));
 					} else {

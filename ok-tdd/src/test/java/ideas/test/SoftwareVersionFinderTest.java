@@ -28,32 +28,32 @@ public class SoftwareVersionFinderTest {
 
 	@Test
 	public void whenInputFileIsInvalidThenReturnNull() {
-		List<Server> serverDetails = versionFinder.readInputFile(null);
+		List<Server> serverDetails = versionFinder.readInputFile(null, "");
 		assertNull("Server list should be null", serverDetails);
 
-		serverDetails = versionFinder.readInputFile("");
+		serverDetails = versionFinder.readInputFile("", "");
 		assertNull("Server list should be null", serverDetails);
 
-		serverDetails = versionFinder.readInputFile("invalid_file");
+		serverDetails = versionFinder.readInputFile("invalid_file", "");
 		assertNull("Server list should be null", serverDetails);
 	}
 
 	@Test
 	public void whenInputFileContainsInvalidFormatThenReturnNull() {
-		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/invalid_input.txt");
+		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/invalid_input.txt", ":");
 		assertNull("Server list should be null", serverDetails);
 	}
 
 	@Test
 	public void whenInputFileIsVaidThenReturnParsedServerDetails() {
-		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt");
+		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt", ",\\s*");
 		assertNotNull("Server list should not be null", serverDetails);
 		assertEquals("Server list should contain 6 elemets", 6, serverDetails.size());
 	}
 
 	@Test
 	public void whenServerDetailsArePassedThenShowSoftwareWithOutdatedVersion() {
-		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt");
+		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt", ",\\s*");
 		List<String> result = versionFinder.processData(serverDetails);
 		assertEquals("Incorrect output", "[Python]", result.toString());
 	}
@@ -83,7 +83,7 @@ public class SoftwareVersionFinderTest {
 
 	@Test
 	public void whenProcessedDataIsPassedThenFileShouldBeCreatedAndWrittenCorrectly() {
-		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt");
+		List<Server> serverDetails = versionFinder.readInputFile("src/test/resources/input.txt", ",\\s*");
 		List<String> result = versionFinder.processData(serverDetails);
 
 		String ofile = "src/test/resources/output.txt";
