@@ -1,0 +1,6 @@
+Server1, Db, MySql, 5.3
+Server2, Db, MySql, 5.1
+Server1, Pl, Python, 12.2.3
+Server2, Pl, Python, 12.2.1
+Server3, Pl, Python, 12.2
+Server2, OS, Ubuntu, 16.04
